@@ -73,8 +73,8 @@ class GameView(View):
         player = Player.players.get(pk=player_id)
 
         thumbs_seen, eyes_seen = player_info(game, player)
-        
-        roles = ', '.join(list(map(lambda x: str(x.role), game.player_set.filter(is_kicked=False).all())))
+
+        roles = [player.role for player in game.player_set.order_by('role').filter(is_kicked=False)]
 
         return render(request, self.template_name, {
             'game': game,

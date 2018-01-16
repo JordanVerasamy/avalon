@@ -21,7 +21,7 @@
 
 {% block content %}
 <p>You are: <b>{{ self.role }}</b></p>
-<p>Roles: {{ roles }}</p>
+<p>Roles: {{ roles|join:", " }}</p>
 <table class="table">
   <thead>
     <tr>
