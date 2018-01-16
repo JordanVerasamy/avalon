@@ -100,6 +100,11 @@ class CreateGameView(View):
             request.POST.get('has_mordred', 'off') == 'on',
             request.POST.get('has_oberon', 'off') == 'on',
         )
+
+        if not game:
+            messages.add_message(request, messages.ERROR, 'Too many spy roles, not enough spies.')
+            return redirect('create_game')
+
         player = Player.players.create_guest_player(
             game=game,
             name=name.title(),

@@ -5,7 +5,7 @@ import uuid
 from channels import Group
 from django.db import models
 
-from app.avalon import assign_roles
+from app.avalon import assign_roles, gen_role_list
 from .util import lobby_json
 
 
@@ -15,6 +15,9 @@ class GameManager(models.Manager):
         # For the set of all unstarted games joinable ID must be unique
         while self.filter(is_started=False, joinable_id=joinable_id):
             joinable_id = ''.join(random.choices(string.ascii_uppercase, k=4))
+
+        if not gen_role_list(num_players, has_mordred, has_oberon):
+            return False
 
         game = self.model(joinable_id=joinable_id,
                           num_players=num_players,

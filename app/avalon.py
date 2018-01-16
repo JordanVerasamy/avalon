@@ -89,22 +89,25 @@ def gen_default(n):
         return gen_default(9) + [Role.VANILLA_GOOD]
 
 
-def apply_settings(defaults, mordred, oberon):
+def gen_role_list(num_players, mordred, oberon):
+    roles = gen_default(num_players)
     if mordred:
-        if Role.VANILLA_BAD in defaults:
-            defaults.remove(Role.VANILLA_BAD)
+        if Role.VANILLA_BAD in roles:
+            roles.remove(Role.VANILLA_BAD)
         else:
-            defaults.remove(Role.ASSASSIN)
-        defaults.append(Role.MORDRED)
+            roles.remove(Role.ASSASSIN)
+        roles.append(Role.MORDRED)
 
     if oberon:
-        if Role.VANILLA_BAD in defaults:
-            defaults.remove(Role.VANILLA_BAD)
+        if Role.VANILLA_BAD in roles:
+            roles.remove(Role.VANILLA_BAD)
+        elif Role.ASSASSIN in roles:
+            roles.remove(Role.ASSASSIN)
         else:
-            defaults.remove(Role.ASSASSIN)
-        defaults.append(Role.OBERON)
+            return None
+        roles.append(Role.OBERON)
 
-    return defaults
+    return roles
 
 
 def player_info(game, player):
@@ -124,11 +127,9 @@ def player_info(game, player):
 
     return player_thumbs_seen, player_eyes_seen
 
-
 def assign_roles(game):
     players = game.players()
-    defaults = gen_default(game.num_players)
-    roles = apply_settings(defaults, game.has_mordred, game.has_oberon)
+    roles = gen_role_list(game.num_players, game.has_mordred, game.has_oberon)
     shuffle(roles)
     for player, role in zip(players, roles):
         player.set_role(role)
