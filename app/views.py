@@ -74,12 +74,10 @@ class GameView(View):
 
         thumbs_seen, eyes_seen = player_info(game, player)
 
-        roles = [player.role for player in game.player_set.order_by('role').filter(is_kicked=False)]
-
         return render(request, self.template_name, {
             'game': game,
             'self': player,
-            'roles': roles,
+            'roles': game.players().order_by('role').values_list('role', flat=True),
             'players': game.players(),
             'thumbs_seen': thumbs_seen,
             'eyes_seen': eyes_seen,
